@@ -1,2 +1,2 @@
 @main def bloxorz: Unit =
-  game.ConsoleGameMenu.gameLoop()
+  game.ConsoleMainMenu.gameLoop()

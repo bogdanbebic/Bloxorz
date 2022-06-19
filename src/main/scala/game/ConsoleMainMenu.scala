@@ -5,7 +5,7 @@ import map.{MapEditor, ConsoleMapEditor}
 import map.MapReader
 import scala.util.{Success, Failure}
 
-object ConsoleGameMenu {
+object ConsoleMainMenu {
   private var map: Vector[Vector[MapTile]] = Vector(Vector())
 
   private val usage: String = """Choose menu option:
