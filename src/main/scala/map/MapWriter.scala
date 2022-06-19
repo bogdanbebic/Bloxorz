@@ -3,9 +3,9 @@ package map
 import scala.util.{Try, Success, Failure}
 
 object MapWriter {
-  def writeToFile(filepath: String, map: Vector[Vector[MapTile]]): Unit = {
+  def writeToFile(filepath: String, map: Vector[Vector[MapTile]]): Try[Nothing] = {
     val contents: String = toEtfFormatString(map)
-    // TODO: print to file
+    Failure(java.lang.UnsupportedOperationException())
   }
 
   def toEtfFormatString(map: Vector[Vector[MapTile]]): String =

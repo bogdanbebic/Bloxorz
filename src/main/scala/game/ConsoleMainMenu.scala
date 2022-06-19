@@ -2,7 +2,7 @@ package game
 
 import map.MapTile
 import map.{MapEditor, ConsoleMapEditor}
-import map.MapReader
+import map.{MapReader, MapWriter}
 import scala.util.{Success, Failure}
 
 object ConsoleMainMenu {
@@ -12,6 +12,7 @@ object ConsoleMainMenu {
     load <filepath>: Load map from file
     start: Start game from loaded map
     create: Create new map from loaded map
+    save <filepath>: Save map to file
     exit: Exit game"""
 
   def gameLoop(): Unit = {
@@ -29,13 +30,22 @@ object ConsoleMainMenu {
         }
 
         case "start" => println("Start game")
+
         case "create" => {
           val editor = ConsoleMapEditor(map)
           editor.edit()
           map = editor.map
         }
 
+        case s"save $filepath" => {
+          MapWriter.writeToFile(filepath, map) match {
+            case Success(_)  => println(s"Saved map to $filepath")
+            case Failure(ex) => println(ex)
+          }
+        }
+
         case "exit" => return
+
         case option => println(s"Unrecognized menu option: '$option'")
       }
     }
