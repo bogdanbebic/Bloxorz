@@ -5,8 +5,7 @@ import scala.util.{Try, Success, Failure}
 
 import map.transformations.SingleTileMapTransformation
 
-final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]])
-    extends MapEditor {
+final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]]) {
   def map = _map
 
   private val usage: String = """Choose map editing operation:
