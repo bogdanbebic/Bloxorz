@@ -1,7 +1,7 @@
 package game
 
 import map.MapTile
-import map.{MapEditor, ConsoleMapEditor}
+import map.ConsoleMapEditor
 import map.{MapReader, MapWriter}
 import scala.util.{Success, Failure}
 
@@ -29,7 +29,7 @@ object ConsoleMainMenu {
           }
         }
 
-        case "start" => println("Start game")
+        case "start" => ConsoleGameMenu(map).game()
 
         case "create" => {
           val editor = ConsoleMapEditor(map)
