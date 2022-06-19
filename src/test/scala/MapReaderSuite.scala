@@ -10,13 +10,13 @@ class MapReaderSuite extends AnyFlatSpec {
     assert(MapReader.parseEtfFormat(input).isFailure)
   }
 
-  "parseEtfFormat" should "return Failure when input contains non-ETF format chars" in {
+  it should "return Failure when input contains non-ETF format chars" in {
     val input = Vector("x")
 
     assert(MapReader.parseEtfFormat(input).isFailure)
   }
 
-  "parseEtfFormat" should "return Success and successfully parsed ETF format" in {
+  it should "return Success and successfully parsed ETF format" in {
     val input = Vector("-o", "S.", "-T")
     val expected = Vector(
       Vector(NoTile, RegularTile),
