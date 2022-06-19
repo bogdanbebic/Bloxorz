@@ -8,10 +8,9 @@ import map.transformations.SingleTileMapTransformation
 class SingleTileMapTransformationSuite extends AnyFlatSpec {
   "transform" should "do nothing on empty map" in {
     val map: Vector[Vector[MapTile]] = Vector(Vector())
-    val expected: Vector[Vector[MapTile]] = Vector(Vector())
     val transformation = SingleTileMapTransformation(0, 0, RegularTile)
 
-    assert(transformation.transform(map) == expected)
+    assert(transformation.transform(map) == map)
   }
 
   it should "transform map with given element" in {
