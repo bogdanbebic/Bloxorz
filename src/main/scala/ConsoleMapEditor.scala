@@ -60,7 +60,7 @@ final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]])
     position match {
       case Success((row: Int, col: Int)) => {
         val transformation = SingleTileMapTransformation(row, col, tileType)
-        transformation.transform(map)
+        return transformation.transform(map)
       }
       case Failure(e) => println(e)
       case Success(_) => println("Program bug, please report")
