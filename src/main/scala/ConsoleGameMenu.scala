@@ -2,6 +2,8 @@ package game
 
 import map.MapTile
 import map.{MapEditor, ConsoleMapEditor}
+import map.MapReader
+import scala.util.{Success, Failure}
 
 object ConsoleGameMenu {
   private var map: Vector[Vector[MapTile]] = Vector(Vector())
@@ -19,8 +21,14 @@ object ConsoleGameMenu {
 
       val input = io.StdIn.readLine()
       input match {
-        case s"load $filepath" => println(s"Load map from '$filepath'")
-        case "start"           => println("Start game")
+        case s"load $filepath" => {
+          MapReader.readFromFile(filepath) match {
+            case Success(parsedMap) => map = parsedMap
+            case Failure(ex)        => println(ex)
+          }
+        }
+
+        case "start" => println("Start game")
         case "create" => {
           val editor = ConsoleMapEditor(map)
           editor.edit()
