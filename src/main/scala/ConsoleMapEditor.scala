@@ -20,7 +20,7 @@ final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]])
     switch: Switch all special tiles to regular tiles
     filter <row> <col> <N>: Convert given tile to regular tile if a special tile is within N vertical or horizontal tiles
     complex <name>: Run complex operation with given name
-    show: Print current map on output
+    show: Print current map to output
     exit: Exit map editing"""
 
   def edit(): Unit = {
@@ -43,7 +43,7 @@ final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]])
         case "switch"           => println("switch")
         case s"filter $i $j $n" => println(s"filter '$i' '$j' '$n'")
         case s"complex $name"   => println(s"complex '$name'")
-        case "show"             => println(map)
+        case "show"             => println(MapWriter.toEtfFormatString(_map))
         case "exit"             => return
         case option             => println(s"Unrecognized option: '$option'")
       }
