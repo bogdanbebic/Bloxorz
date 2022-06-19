@@ -1,7 +1,7 @@
 import org.scalatest.Assertions._
 import org.scalatest.flatspec.AnyFlatSpec
 
-import moves._
+import game._
 
 class MoveSuite extends AnyFlatSpec {
 
