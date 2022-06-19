@@ -15,7 +15,7 @@ object MapReader {
   def parseEtfFormat(etfFormat: Vector[String]): Try[Vector[Vector[MapTile]]] =
     Try {
       val rows = etfFormat.length
-      val cols = etfFormat.apply(0).length
+      val cols = etfFormat(0).length
 
       // checks whether all lines are of the same length
       if (etfFormat.exists(_.length != cols)) {
@@ -24,7 +24,7 @@ object MapReader {
 
       return Success(
         Vector.tabulate(rows, cols)((i, j) =>
-          fromEtfFormat(etfFormat.apply(i).apply(j)).get
+          fromEtfFormat(etfFormat(i)(j)).get
         )
       )
     }
