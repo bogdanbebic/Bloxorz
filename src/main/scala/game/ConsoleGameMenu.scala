@@ -24,8 +24,14 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
       input match {
         case s"play $filepath" => {
           MoveReader.readFromFile(filepath) match {
-            case Success(moves) => moves foreach this.playMove
-            case Failure(ex)    => println(ex)
+            case Failure(ex) => println(ex)
+            case Success(moves) =>
+              moves.foreach(move => {
+                val outcome = this.playMove(move)
+                if (outcome != ValidMove) {
+                  return
+                }
+              })
           }
         }
 
@@ -37,8 +43,13 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
 
         case option =>
           fromEtfFormat(option) match {
-            case Some(move) => this.playMove(move)
-            case None       => println(s"Unrecognized menu option: '$option'")
+            case None => println(s"Unrecognized menu option: '$option'")
+            case Some(move) => {
+              val outcome = this.playMove(move)
+              if (outcome != ValidMove) {
+                return
+              }
+            }
           }
       }
     }
@@ -55,7 +66,8 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
     BlockPosition(Position(row, col), None)
   }
 
-  private def playMove(move: Move): Unit = {
+  private def playMove(move: Move): MoveOutcome = {
     println(s"Play move $move")
+    ValidMove
   }
 }
