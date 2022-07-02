@@ -2,7 +2,9 @@ package game
 
 import map.MapTile
 import map.ConsoleMapEditor
-import map.{MapReader, MapWriter}
+import map.MapReader
+import map.MapValidator
+import map.MapWriter
 import scala.util.{Success, Failure}
 
 object ConsoleMainMenu {
@@ -29,7 +31,12 @@ object ConsoleMainMenu {
           }
         }
 
-        case "start" => ConsoleGameMenu(map).game()
+        case "start" => {
+          MapValidator.validate(map) match {
+            case true  => ConsoleGameMenu(map).game()
+            case false => println("Map not valid")
+          }
+        }
 
         case "create" => {
           val editor = ConsoleMapEditor(map)
