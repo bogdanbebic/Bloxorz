@@ -1,6 +1,7 @@
 package game
 
 import map.MapTile
+import scala.util.{Success, Failure}
 
 class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
   private val usage: String = """Choose game option:
@@ -17,7 +18,12 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
 
       val input = io.StdIn.readLine()
       input match {
-        case s"play $filepath" => println(s"Play moves from $filepath")
+        case s"play $filepath" => {
+          MoveReader.readFromFile(filepath) match {
+            case Success(moves) => moves foreach this.playMove
+            case Failure(ex)    => println(ex)
+          }
+        }
 
         case "solve" => println("Print solution")
 
@@ -27,10 +33,14 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
 
         case option =>
           fromEtfFormat(option) match {
-            case Some(move) => println(s"Play move $move")
+            case Some(move) => this.playMove(move)
             case None       => println(s"Unrecognized menu option: '$option'")
           }
       }
     }
+  }
+
+  private def playMove(move: Move): Unit = {
+    println(s"Play move $move")
   }
 }
