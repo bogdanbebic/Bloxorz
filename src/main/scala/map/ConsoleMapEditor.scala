@@ -3,7 +3,11 @@ package map
 import scala.annotation.tailrec
 import scala.util.{Try, Success, Failure}
 
-import map.transformations.SingleTileMapTransformation
+import map.transformations.{
+  InversionMapTransformation,
+  SingleTileMapTransformation,
+  SwitchMapTransformation
+}
 
 final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]]) {
   def map = _map
@@ -35,11 +39,11 @@ final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]]) {
         case s". $i $j" =>
           _map =
             parseAndRunSingleTileTransformation(i, j, _map, FallthroughTile)
-        case s"S $i $j"         => println(s"S '$i' '$j'")
-        case s"T $i $j"         => println(s"T '$i' '$j'")
-        case s"create $name"    => println(s"create '$name'")
-        case "inversion"        => println("inversion")
-        case "switch"           => println("switch")
+        case s"S $i $j"      => println(s"S '$i' '$j'")
+        case s"T $i $j"      => println(s"T '$i' '$j'")
+        case s"create $name" => println(s"create '$name'")
+        case "inversion" => _map = InversionMapTransformation().transform(_map)
+        case "switch"    => _map = SwitchMapTransformation().transform(_map)
         case s"filter $i $j $n" => println(s"filter '$i' '$j' '$n'")
         case s"complex $name"   => println(s"complex '$name'")
         case "show"             => println(MapWriter.toEtfFormatString(_map))
