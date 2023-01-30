@@ -6,7 +6,9 @@ import scala.util.{Try, Success, Failure}
 import map.transformations.{
   InversionMapTransformation,
   SingleTileMapTransformation,
-  SwitchMapTransformation
+  SwitchMapTransformation,
+  StartTileMoveMapTransformation,
+  TargetTileMoveMapTransformation
 }
 
 final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]]) {
@@ -39,8 +41,10 @@ final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]]) {
         case s". $i $j" =>
           _map =
             parseAndRunSingleTileTransformation(i, j, _map, FallthroughTile)
-        case s"S $i $j"      => println(s"S '$i' '$j'")
-        case s"T $i $j"      => println(s"T '$i' '$j'")
+        case s"S $i $j" =>
+          _map = parseAndRunMoveStartTileTransformation(i, j, _map)
+        case s"T $i $j" =>
+          _map = parseAndRunMoveTargetTileTransformation(i, j, _map)
         case s"create $name" => println(s"create '$name'")
         case "inversion" => _map = InversionMapTransformation().transform(_map)
         case "switch"    => _map = SwitchMapTransformation().transform(_map)
@@ -51,6 +55,44 @@ final class ConsoleMapEditor(private var _map: Vector[Vector[MapTile]]) {
         case option             => println(s"Unrecognized option: '$option'")
       }
     }
+  }
+
+  private def parseAndRunMoveStartTileTransformation(
+      i: String,
+      j: String,
+      map: Vector[Vector[MapTile]]
+  ): Vector[Vector[MapTile]] = {
+    val position = parseMapPosition(i, j)
+    position match {
+      case Success((row: Int, col: Int)) => {
+        val transformation = StartTileMoveMapTransformation(row, col)
+        return transformation.transform(map)
+      }
+      case Failure(e) => println(e)
+      case Success(_) => println("Program bug, please report")
+    }
+
+    println("Map not changed")
+    map
+  }
+
+  private def parseAndRunMoveTargetTileTransformation(
+      i: String,
+      j: String,
+      map: Vector[Vector[MapTile]]
+  ): Vector[Vector[MapTile]] = {
+    val position = parseMapPosition(i, j)
+    position match {
+      case Success((row: Int, col: Int)) => {
+        val transformation = TargetTileMoveMapTransformation(row, col)
+        return transformation.transform(map)
+      }
+      case Failure(e) => println(e)
+      case Success(_) => println("Program bug, please report")
+    }
+
+    println("Map not changed")
+    map
   }
 
   private def parseAndRunSingleTileTransformation(
