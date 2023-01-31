@@ -12,9 +12,9 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
     save <filepath>: Save solution to file
     exit: Exit game"""
 
-  def game(): Unit = {
-    val block = this.positionFromMap(this.map)
+  private var block: BlockPosition = this.positionFromMap(this.map)
 
+  def game(): Unit = {
     // continue prompting the user for actions until exit
     while (true) {
       println(MapWriter.toEtfFormatString(this.map, block))
@@ -27,9 +27,22 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
             case Failure(ex) => println(ex)
             case Success(moves) =>
               moves.foreach(move => {
-                val outcome = this.playMove(move)
-                if (outcome != ValidMove) {
-                  return
+                this.block = moveBlock(this.block, move)
+                val outcome = getOutcome(this.block, this.map)
+                outcome match {
+                  case ValidMove => println("Block moved.")
+                  case FellThrough => {
+                    println("The block fell through the tiles.")
+                    return
+                  }
+                  case OutOfBounds => {
+                    println("The block went out of bounds.")
+                    return
+                  }
+                  case GameWon => {
+                    println("You won the game!")
+                    return
+                  }
                 }
               })
           }
@@ -45,9 +58,22 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
           fromEtfFormat(option) match {
             case None => println(s"Unrecognized menu option: '$option'")
             case Some(move) => {
-              val outcome = this.playMove(move)
-              if (outcome != ValidMove) {
-                return
+              this.block = moveBlock(this.block, move)
+              val outcome = getOutcome(this.block, this.map)
+              outcome match {
+                case ValidMove => println("Block moved.")
+                case FellThrough => {
+                  println("The block fell through the tiles.")
+                  return
+                }
+                case OutOfBounds => {
+                  println("The block went out of bounds.")
+                  return
+                }
+                case GameWon => {
+                  println("You won the game!")
+                  return
+                }
               }
             }
           }
@@ -64,10 +90,5 @@ class ConsoleGameMenu(private val map: Vector[Vector[MapTile]]) {
 
     val (row: Int, col: Int) = startTileIndices.get
     BlockPosition(Position(row, col), None)
-  }
-
-  private def playMove(move: Move): MoveOutcome = {
-    println(s"Play move $move")
-    ValidMove
   }
 }
